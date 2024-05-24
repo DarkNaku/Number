@@ -1,0 +1,14 @@
+{
+  "name": "com.darknaku.number",
+  "displayName": "Big Number",
+  "version": "0.0.1",
+  "unity" : "2018.3",
+  "author" : "DarkNaku",
+  "description" : "DarkNaku Big Number Package - A package for expressing large numbers used in things like idle games.",
+  "dependencies": {
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/DarkNaku/Number.git"
+  }
+}
