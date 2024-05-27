@@ -110,6 +110,15 @@ namespace DarkNaku.Number
             }
         }
 
+        public override bool Equals(object obj)
+        {
+            if (obj is not Number) return false;
+
+            return Equals((Number)obj);
+        }
+
+        public override int GetHashCode() => HashCode.Combine(_value, _exponent);
+
         public bool Equals(Number other)
         {
             other.Align(_exponent);
@@ -144,11 +153,11 @@ namespace DarkNaku.Number
             {
                 if (_exponent == 0)
                 {
-                    return $"{Math.Floor(_value * 100) * 0.01d:0.##}";
+                    return $"{_value:0.##}";
                 }
                 else
                 {
-                    return $"{Math.Floor(_value * 100) * 0.01d:0.##}{MAGNITUDES[_exponent]}";
+                    return $"{_value:0.00}{MAGNITUDES[_exponent]}";
                 }
             }
             else
@@ -157,7 +166,7 @@ namespace DarkNaku.Number
                 var secondOffset = magnitude % 26;
                 var firstOffset = magnitude / 26;
                 
-                return $"{Math.Floor(_value * 100) * 0.01d:0.##}{Convert.ToChar(BASE_CHAR + firstOffset)}{Convert.ToChar(BASE_CHAR + secondOffset)}";
+                return $"{_value:0.00}{Convert.ToChar(BASE_CHAR + firstOffset)}{Convert.ToChar(BASE_CHAR + secondOffset)}";
             }
         }
     

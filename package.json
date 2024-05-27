@@ -1,7 +1,7 @@
 {
   "name": "com.darknaku.number",
   "displayName": "Big Number",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "unity" : "2018.3",
   "author" : "DarkNaku",
   "description" : "DarkNaku Big Number Package - A package for expressing large numbers used in things like idle games.",
@@ -10,5 +10,12 @@
   "repository": {
     "type": "git",
     "url": "git+https://github.com/DarkNaku/Number.git"
-  }
+  },
+  "samples": [
+    {
+      "displayName": "Big Number",
+      "description": "Big Number Data Type Example",
+      "path": "Samples~/SampleNumber"
+    }
+  ]
 }

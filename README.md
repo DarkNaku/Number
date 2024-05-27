@@ -3,6 +3,8 @@
 ### 소개
 클리커 게임 및 방치형 게임에서 많이 보이는 K, M, B, T, AA, AB 등과 같이 큰 숫자를 표현하기 위한 자료형 타입입니다.
 
+![image](Samples~/Images/screenshot.gif)
+
 ### 설치방법
 1. 패키지 관리자의 툴바에서 좌측 상단에 플러스 메뉴를 클릭합니다.
 2. 추가 메뉴에서 Add package from git URL을 선택하면 텍스트 상자와 Add 버튼이 나타납니다.
