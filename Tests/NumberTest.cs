@@ -91,6 +91,13 @@ public class NumberTest
         Assert.True(new Number(-1, 1) <= new Number(1, 0));
         Assert.True(new Number(-1, 0) >= new Number(-1, 0));
         Assert.True(new Number(-1, 0) <= new Number(-1, 0));
+        Assert.AreEqual(0, new Number(1, 1).CompareTo(new Number(1000)));
+        Assert.AreEqual(-1, new Number(999).CompareTo(new Number(1, 1)));
+        Assert.AreEqual(-1, new Number(999).CompareTo(new Number(1000)));
+        Assert.AreEqual(1, new Number(999, 1).CompareTo(new Number(1, 1)));
+        Assert.AreEqual(1, new Number(999, 2).CompareTo(new Number(1000, 1)));
+        Assert.AreEqual(-1, new Number(-1, 1).CompareTo(new Number(1, 0)));
+        Assert.AreEqual(-1, new Number(-1, 0).CompareTo(new Number(1, 0)));
     }
 
     [Test]

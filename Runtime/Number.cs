@@ -1,3 +1,6 @@
+// Copyright (c) 2024 DarkNaku
+// MIT License
+
 using System;
 using System.Text.RegularExpressions;
 using UnityEngine;
@@ -5,7 +8,7 @@ using UnityEngine;
 namespace DarkNaku.Number
 {
     [Serializable]
-    public struct Number : IEquatable<Number>
+    public struct Number : IEquatable<Number>, IComparable<Number>
     {
         public static readonly Number Zero = new Number();
         public static readonly Number One = new Number(1, 0);
@@ -112,6 +115,27 @@ namespace DarkNaku.Number
             other.Align(_exponent);
 
             return _exponent == other.Exponent && _value.CompareTo(other.Value) == 0;
+        }
+
+        public int CompareTo(Number other)
+        {
+            other.Align(_exponent);
+            
+            if (_value < 0 && other.Value > 0) return -1;
+            if (_value > 0 && other.Value < 0) return 1;
+
+            if (_value < 0 && other.Value < 0)
+            {
+                if (_exponent > other.Exponent) return -1;
+                if (_exponent < other.Exponent) return 1;
+                
+                return _value.CompareTo(other.Value);
+            }
+            
+            if (_exponent > other.Exponent) return 1;
+            if (_exponent < other.Exponent) return -1;
+                
+            return _value.CompareTo(other.Value);
         }
 
         public override string ToString()
