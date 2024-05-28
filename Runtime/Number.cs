@@ -17,6 +17,10 @@ namespace DarkNaku.Number
         private static readonly int BASE_CHAR = Convert.ToInt32('A');
         private static readonly string NUMBER_PATTERN = @"-*\d+\.?\d*[a-zA-Z]{0,2}";
         private static readonly string EXPONENT_PATTERN = @"[a-zA-Z]{1,2}";
+        
+        private const int ALPHABET_COUNT = 26;
+        private const double EXPONENT_UNIT = 1000d;
+        private const double REVERSE_EXPONENT_UNIT = 0.001d;
 
         public double Value => _value;
         public uint Exponent => _exponent;
@@ -92,7 +96,7 @@ namespace DarkNaku.Number
                     var firstOffset = Convert.ToInt32(exponentString[0]) - BASE_CHAR;
                     var secondOffset = Convert.ToInt32(exponentString[1]) - BASE_CHAR;
 
-                    return (uint)((firstOffset * 26) + secondOffset + MAGNITUDES.Length);
+                    return (uint)((firstOffset * ALPHABET_COUNT) + secondOffset + MAGNITUDES.Length);
                 }
                 
                 if (exponentString.Length == 1)
@@ -153,20 +157,20 @@ namespace DarkNaku.Number
             {
                 if (_exponent == 0)
                 {
-                    return $"{_value:0.##}";
+                    return $"{Math.Floor(_value * 100) * 0.01d:0.##}";
                 }
                 else
                 {
-                    return $"{_value:0.00}{MAGNITUDES[_exponent]}";
+                    return $"{Math.Floor(_value * 100) * 0.01d:0.##}{MAGNITUDES[_exponent]}";
                 }
             }
             else
             {
                 var magnitude = _exponent - MAGNITUDES.Length;
-                var secondOffset = magnitude % 26;
-                var firstOffset = magnitude / 26;
+                var secondOffset = magnitude % ALPHABET_COUNT;
+                var firstOffset = magnitude / ALPHABET_COUNT;
                 
-                return $"{_value:0.00}{Convert.ToChar(BASE_CHAR + firstOffset)}{Convert.ToChar(BASE_CHAR + secondOffset)}";
+                return $"{Math.Floor(_value * 100) * 0.01d:0.##}{Convert.ToChar(BASE_CHAR + firstOffset)}{Convert.ToChar(BASE_CHAR + secondOffset)}";
             }
         }
     
@@ -178,14 +182,20 @@ namespace DarkNaku.Number
         
             while (_value < 1f && _exponent > 0)
             {
-                _value *= 1000d;
+                _value *= EXPONENT_UNIT;
                 _exponent--;
             }
             
-            while (_value >= 1000d)
+            while (_value >= EXPONENT_UNIT)
             {
-                _value *= 0.001d;
+                _value *= REVERSE_EXPONENT_UNIT;
                 _exponent++;
+            }
+            
+            if (_exponent > 680) // 999.99ZZ is Maximum Value
+            {
+                _value = 999.99;
+                _exponent = 680;
             }
             
             if (isNegative)
@@ -198,7 +208,7 @@ namespace DarkNaku.Number
         {
             while (_exponent < toExponent)
             {
-                _value *= 0.001d;
+                _value *= REVERSE_EXPONENT_UNIT;
                 _exponent++;
             }
         }

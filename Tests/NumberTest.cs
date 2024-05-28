@@ -209,4 +209,13 @@ public class NumberTest
         Assert.True(new Number("12.34M") == new Number(12340000d, 0));
         Assert.True(new Number("0.45") == new Number(0.45d, 0));
     }
+
+    [Test]
+    public void _05_경계_테스트()
+    {
+        Assert.True(new Number("999.99ZZ") == new Number(999.99, 680));
+        Assert.True(new Number("-999.99ZZ") == new Number(-999.99, 680));
+        Assert.True(new Number("999.99ZZ") == new Number(999.99, 680) + 1);
+        Assert.True(new Number("-999.99ZZ") == new Number(-999.99, 680) - 1);
+    }
 }
