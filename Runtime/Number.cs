@@ -13,7 +13,7 @@ namespace DarkNaku.Number
         public static readonly Number Zero = new Number();
         public static readonly Number One = new Number(1, 0);
 
-        private static readonly string[] MAGNITUDES = new string[] { "", "K", "M", "B", "T" };
+        private static readonly char[] MAGNITUDES = new char[] { '\0', 'K', 'M', 'B', 'T' };
         private static readonly int BASE_CHAR = Convert.ToInt32('A');
         private static readonly string NUMBER_PATTERN = @"-*\d+\.?\d*[a-zA-Z]{0,2}";
         private static readonly string EXPONENT_PATTERN = @"[a-zA-Z]{1,2}";
@@ -103,7 +103,7 @@ namespace DarkNaku.Number
                 {
                     for (uint i = 0; i < MAGNITUDES.Length; i++)
                     {
-                        if (exponentString == MAGNITUDES[i])
+                        if (exponentString == MAGNITUDES[i].ToString())
                         {
                             return i;
                         }
@@ -150,6 +150,68 @@ namespace DarkNaku.Number
                 
             return _value.CompareTo(other.Value);
         }
+        
+        public unsafe bool GetString(ref string result)
+        {
+            if (result.Length < 8)
+            {
+                Debug.LogError("[Number] GetString : Buffer was too small.");
+                return false;
+            }
+            
+            Span<char> buffer = stackalloc char[8];
+
+            var number = Math.Floor(_value * 100) * 0.01d;
+            
+            if (number.TryFormat(buffer, out int charsWritten, _exponent > 0 ? "0.00" : "0.##"))
+            {
+                fixed (char* p = result)
+                {
+                    int index = 0;
+                    
+                    for (int i = 0; i < result.Length; i++)
+                    {
+                        if (i < charsWritten)
+                        {
+                            p[i] = buffer[i];
+                            index = i;
+                        }
+                        else
+                        {
+                            p[i] = '\0';
+                        }
+                    }
+                    
+                    if (_exponent < MAGNITUDES.Length)
+                    {
+                        if (_exponent == 0)
+                        {
+                        }
+                        else
+                        {
+                            p[index + 1] = MAGNITUDES[_exponent];
+                        }
+                    }
+                    else
+                    {
+                        var magnitude = _exponent - MAGNITUDES.Length;
+                        var secondOffset = magnitude % ALPHABET_COUNT;
+                        var firstOffset = magnitude / ALPHABET_COUNT;
+
+                        p[index + 1] = Convert.ToChar(BASE_CHAR + firstOffset);
+                        p[index + 2] = Convert.ToChar(BASE_CHAR + secondOffset);
+                    }
+                }
+
+                return true;
+            }
+            else
+            {
+                Debug.LogError("[Number] GetString : Buffer was too small.");
+            }
+            
+            return false;
+        }
 
         public override string ToString()
         {
@@ -161,7 +223,7 @@ namespace DarkNaku.Number
                 }
                 else
                 {
-                    return $"{Math.Floor(_value * 100) * 0.01d:0.##}{MAGNITUDES[_exponent]}";
+                    return $"{Math.Floor(_value * 100) * 0.01d:0.00}{MAGNITUDES[_exponent]}";
                 }
             }
             else
@@ -170,7 +232,7 @@ namespace DarkNaku.Number
                 var secondOffset = magnitude % ALPHABET_COUNT;
                 var firstOffset = magnitude / ALPHABET_COUNT;
                 
-                return $"{Math.Floor(_value * 100) * 0.01d:0.##}{Convert.ToChar(BASE_CHAR + firstOffset)}{Convert.ToChar(BASE_CHAR + secondOffset)}";
+                return $"{Math.Floor(_value * 100) * 0.01d:0.00}{Convert.ToChar(BASE_CHAR + firstOffset)}{Convert.ToChar(BASE_CHAR + secondOffset)}";
             }
         }
     

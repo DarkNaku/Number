@@ -34,6 +34,15 @@ number++; // 2
 number *= 10; // 20
 
 number /= 10; // 2
+
+// 메모리 할당 없이 문자열 변경
+private TextMeshProUGUI _textNumber;
+private string _numberString = new string(new char[8]);
+
+if (_number.GetString(ref _numberString))
+{
+    _textNumber.SetText(_numberString);
+}
 ```
 
 * 1000자리 단위로 표시 단위가 바뀝니다. 
@@ -42,6 +51,7 @@ number /= 10; // 2
 * 음수 지원합니다.
 * 비교연산, 사칙연산, 형변환을 지원합니다.
 * 직렬화 지원합니다.
+* 메모리 할당 없이 문자열로 변환하는 기능을 지원합니다.
 
 ### 추가설명
 * 문자열로 부터서 생성하는 생성자는 직렬화 된 값을 복원하기 위해 있는 기능이며 내부적으로 정규표현식을 사용하기 때문에 많이 느릴 수 있습니다. 사용에 참고하시기 바랍니다.
